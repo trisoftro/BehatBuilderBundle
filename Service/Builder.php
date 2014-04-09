@@ -2,7 +2,6 @@
 
 namespace TSS\BehatBuilderBundle\Service;
 
-use JMS\Serializer\Handler\ArrayCollectionHandler;
 use Symfony\Component\Finder\Finder;
 
 class Builder {
@@ -12,26 +11,27 @@ class Builder {
      */
     protected $finder;
 
-    protected $features;
+    protected $features = null;
 
     protected $kernelRootDir;
 
     public function __construct($kernelRootDir)
     {
         $this->finder = Finder::create();
-        $this->features = array();
         $this->kernelRootDir = $kernelRootDir;
     }
 
     public function getFeatures()
     {
-        $this->finder
-            ->files()
-            ->in($this->kernelRootDir . '/../src')
-            ->name('*.feature');
+        if (!$this->features) {
+            $this->finder
+                ->files()
+                ->in($this->kernelRootDir . '/../src')
+                ->name('*.feature');
 
-        foreach ($this->finder as $file) {
-            $this->features[$file->getRealPath()] = $file->getFilename();
+            foreach ($this->finder as $file) {
+                $this->features[$file->getRealPath()] = $file->getFilename();
+            }
         }
 
         return $this->features;

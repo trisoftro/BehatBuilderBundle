@@ -10,10 +10,6 @@
         {% stylesheets filter='cssrewrite,?yui_css' output='css/behat.css'
         '@TSSBehatBuilderBundle/Resources/public/css/bootstrap.css'
         '@TSSBehatBuilderBundle/Resources/public/css/navbar-fixed-top.css'
-        '@TSSBehatBuilderBundle/Resources/public/css/datepicker.css'
-        '@TSSBehatBuilderBundle/Resources/public/select2/select2.css'
-        '@TSSBehatBuilderBundle/Resources/public/css/select2-bootstrap.css'
-        '@TSSBehatBuilderBundle/Resources/public/css/jquery.textcomplete.css'
         '@TSSBehatBuilderBundle/Resources/public/css/custom.css'
         %}
         <link rel="stylesheet" type="text/css" media="all" href="{{ asset_url }}">
@@ -47,11 +43,7 @@
     {% javascripts filter='?uglifyjs2' output='js/behat.js'
     '@FOSJsRoutingBundle/Resources/public/js/router.js'
     '@TSSBehatBuilderBundle/Resources/public/js/jquery.js'
-    '@TSSBehatBuilderBundle/Resources/public/js/jquery.textcomplete.js'
-    '@TSSBehatBuilderBundle/Resources/public/js/parsley.min.js'
     '@TSSBehatBuilderBundle/Resources/public/js/bootstrap.min.js'
-    '@TSSBehatBuilderBundle/Resources/public/js/bootstrap-datepicker.js'
-    '@TSSBehatBuilderBundle/Resources/public/select2/select2.js'
     '@TSSBehatBuilderBundle/Resources/public/js/jstorage.min.js'
     '@TSSBehatBuilderBundle/Resources/public/js/global.js'
     %}
