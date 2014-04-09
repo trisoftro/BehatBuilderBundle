@@ -19,6 +19,10 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        return array('name' => 'Radu');
+        $features = $this->get('tss_behat.builder')->getFeatures();
+
+        return array(
+            'features' => $features
+        );
     }
 }
