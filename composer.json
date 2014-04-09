@@ -1,0 +1,22 @@
+{
+    "name": "tsslabs/behat-builder-bundle",
+    "description": "Behat builder interface for building and maintaining scenarios in a Symfony2 project",
+    "keywords": ["behat", "scenario builder"],
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Radu Topala",
+            "email": "radu.topala@trisoft.ro"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2"
+    },
+    "autoload": {
+        "psr-0": {
+            "TSS\\BehatBuilderBundle": ""
+        }
+    },
+    "target-dir": "TSS/BehatBuilderBundle"
+}
