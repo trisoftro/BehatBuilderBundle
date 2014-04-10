@@ -47,12 +47,19 @@
             });
         };
 
-        $(window).bind('popstate', function(event) {
-            var file = this.location.href.substring(this.location.href.indexOf('#')+1);
+        $.loadHash = function() {
+            var file = window.location.href.substring(window.location.href.indexOf('#')+1);
 
             $.loadFile(file);
-        });
+        };
 
+        //load initial hash
+        $.loadHash();
+
+        //load hash on history change
+        $(window).bind('popstate', function(event) {
+            $.loadHash();
+        });
 
         $('a[data-feature]').click(function() {
             var file = this.hash.substring(this.hash.indexOf('#')+1);
