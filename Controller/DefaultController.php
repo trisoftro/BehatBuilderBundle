@@ -7,7 +7,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use TSS\BehatBuilderBundle\Form\NewFeatureType;
 
 /**
  * Behat controller.
@@ -53,5 +55,33 @@ class DefaultController extends Controller
         return new JsonResponse(array(
            'success' => $success
         ));
+    }
+
+    /**
+     * New feature processing
+     *
+     * @Route("/new-feature", name="behat_new_feature", options={"expose"=true})
+     * @Template()
+     */
+    public function newFeatureAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $form   = $this->createForm(new NewFeatureType($this->get('tss_behat.builder')));
+
+        if ($request->isMethod('POST')) {
+            $form->bind($request);
+
+            if ($form->isValid()) {
+
+
+            }
+        }
+
+        $formView = $form->createView();
+
+        return array(
+            'form' => $formView
+        );
     }
 }

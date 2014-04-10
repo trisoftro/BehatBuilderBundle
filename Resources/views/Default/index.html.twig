@@ -1,5 +1,10 @@
 {% extends 'TSSBehatBuilderBundle:Default:layout.html.twig' %}
 
+{% set buttons %}
+    <a class="btn btn-warning hidden-print btn-sm add" href="#">add new feature</a>
+    <a class="btn btn-primary hidden-print btn-sm save" href="#">save</a>
+{% endset %}
+
 {% block body %}
     <div class="panel panel-default">
 
@@ -10,7 +15,9 @@
                     <small id="status"></small>
                 </div>
                 <div class="col-md-4">
-                    <a class="btn btn-primary hidden-print pull-right btn-sm save" href="#">save</a>
+                    <div class="btn-group pull-right">
+                        {{ buttons }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -34,7 +41,9 @@
         <div class="panel-footer">
             <div class="row">
                 <div class="col-md-offset-8 col-md-4">
-                    <a class="btn btn-primary hidden-print pull-right btn-sm save" href="#">save</a>
+                    <div class="btn-group pull-right">
+                        {{ buttons }}
+                    </div>
                 </div>
             </div>
         </div>

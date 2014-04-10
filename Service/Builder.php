@@ -13,6 +13,8 @@ class Builder {
 
     protected $features = null;
 
+    protected $bundles = null;
+
     protected $kernelRootDir;
 
     public function __construct($kernelRootDir)
@@ -35,6 +37,22 @@ class Builder {
         }
 
         return $this->features;
+    }
+
+    public function getBundles()
+    {
+        if (!$this->bundles) {
+            $this->finder
+                ->directories()
+                ->in($this->kernelRootDir . '/../src')
+                ->name('*Bundle');
+
+            foreach ($this->finder as $directory) {
+                $this->bundles[$directory->getRelativePathname()] = $directory->getFilename();
+            }
+        }
+
+        return $this->bundles;
     }
 
     public function loadFile($filePath)

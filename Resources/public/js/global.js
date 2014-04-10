@@ -1,6 +1,97 @@
 (function($) {
     'use strict';
 
+    $.modalDialog = {
+        getModal: function () {
+            var modal = $('#behat-modal');
+            if (modal.length === 0) {
+                modal = $('<div></div>');
+                modal.attr('id', 'behat-modal');
+                modal.addClass('modal').addClass('fade');
+                modal.attr('tabindex', '-1');
+                modal.attr('id', 'behat-modal');
+                modal.attr('aria-hidden', 'true');
+                $('body').append(modal);
+                modal = $('#behat-modal');
+            }
+            return modal;
+        },
+        html: {
+            header: '<div class="modal-header">%header%</div>',
+            body: '<div class="modal-body">%body%</div>',
+            footer: '<div class="modal-footer">%footer%</div>'
+        },
+        defaults: {
+            header: null,
+            body: 'Behat',
+            footer: null,
+            remote: null,
+            backdrop: true,
+            keyboard: true,
+            show: false
+        },
+        currentOptions: {},
+        render: function (options) {
+            $.extend(this.currentOptions, this.defaults, options);
+            this.update();
+            this.show();
+        },
+        update: function () {
+            this.getModal().html(
+
+                '<div class="modal-dialog"><div class="modal-content">' +
+
+                    (this.currentOptions.header === null
+                        ? ''
+                        : this.html.header.replace('%header%', this.currentOptions.header)) +
+                    (this.currentOptions.body === null
+                        ? ''
+                        : this.html.body.replace('%body%', this.currentOptions.body)) +
+                    (this.currentOptions.footer === null
+                        ? ''
+                        : this.html.footer.replace('%footer%', this.currentOptions.footer)) +
+
+                    '</div></div>'
+            );
+        },
+        show: function () {
+            this.getModal().modal('show');
+        },
+        hide: function () {
+            this.getModal().modal('hide');
+        },
+        setHeader: function (data, html) {
+            this.currentOptions.header = html === true ? data : '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>' + data + '</h3>';
+            this.update();
+        },
+        setBody: function (data) {
+            this.currentOptions.body = data;
+            this.update();
+        },
+        setFooter: function (data) {
+            this.currentOptions.footer = data;
+            this.update();
+        },
+        removeHeader: function () {
+            this.setHeader(null);
+        },
+        removeBody: function () {
+            this.setBody(null);
+        },
+        removeFooter: function () {
+            this.setFooter(null);
+        },
+        getHeader: function () {
+            return this.getModal().find('.modal-header');
+        },
+        getBody: function () {
+            return this.getModal().find('.modal-body');
+        },
+        getFooter: function () {
+            return this.getModal().find('.modal-footer');
+        }
+    };
+
     $(function() {
 
         $.timerNotifier = function (text, className, seconds) {
@@ -31,7 +122,7 @@
         var currentFeature;
 
         $.loadFile = function (file) {
-            $('#status').html('Loading `' + file + '`.');
+            $('#status').removeClass().html('Loading `' + file + '`.');
 
             $.ajax({
                 type: 'POST',
@@ -70,9 +161,7 @@
         });
 
         $('a[data-feature]').click(function() {
-            var file = this.hash.substring(this.hash.indexOf('#')+1);
-
-            $.loadFile(file);
+            $.loadHash();
         });
 
         $("a.save").click(function() {
@@ -96,6 +185,35 @@
                     }
                 }
             });
+
+            return false;
+        });
+
+        $("a.add").click(function() {
+
+            $.modalDialog.render({
+                header: '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>Add new feature</h3>',
+                body: $('#new-feature').length ? $.modalDialog.getBody().html() : 'Loading form ...',
+                footer: '<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button><button type="button" class="btn btn-primary">Save</button>'
+            });
+
+            $.modalDialog.show();
+
+            $.modalDialog.getFooter().find('.btn-primary').click(function() {
+                $('#new-feature').submit();
+                return false;
+            });
+
+            if($('#new-feature').length === 0) {
+                $.ajax({
+                    type: 'POST',
+                    url: Routing.generate('behat_new_feature'),
+                    success: function(data)
+                    {
+                        $.modalDialog.setBody(data);
+                    }
+                });
+            }
 
             return false;
         });
