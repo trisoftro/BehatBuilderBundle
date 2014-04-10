@@ -30,10 +30,24 @@ class Builder {
                 ->name('*.feature');
 
             foreach ($this->finder as $file) {
-                $this->features[$file->getRealPath()] = $file->getFilename();
+                $this->features[$file->getRelativePathname()] = $file->getFilename();
             }
         }
 
         return $this->features;
+    }
+
+    public function loadFile($filePath)
+    {
+        $filePath = $this->kernelRootDir . '/../src/' . $filePath;
+
+        return file_get_contents($filePath);
+    }
+
+    public function saveFile($filePath, $data)
+    {
+        $filePath = $this->kernelRootDir . '/../src/' . $filePath;
+
+        return file_put_contents($filePath, $data);
     }
 }

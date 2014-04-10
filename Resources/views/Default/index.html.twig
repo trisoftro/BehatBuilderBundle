@@ -6,26 +6,37 @@
         <div class="panel-heading">
             <div class="row">
                 <div class="col-md-8">
-                    <h3 class="panel-title">Behat Scenario Builder</h3>
+                    <h3 class="panel-title">Behat Feature Builder</h3>
+                    <small id="status"></small>
                 </div>
                 <div class="col-md-4">
-                    <a class="btn btn-warning hidden-print pull-right btn-sm" id="ticket-open" href="#">refresh</a>
+                    <a class="btn btn-primary hidden-print pull-right btn-sm save" href="#">save</a>
                 </div>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-md-3">
-                <ul class="nav bs-docs-sidenav">
+            <div class="col-md-3" id="feature-c">
+                <ul class="nav">
                     {% for key, feature in features %}
-                    <li class="">
-                        <a href="#{{ key }}">{{ feature }}</a>
+                    <li class="{% if loop.first %}{% endif %}">
+                        <a data-feature href="#{{ key }}">{{ feature }}</a>
                     </li>
                     {% endfor %}
                 </ul>
             </div>
 
-            <div class="col-md-9" id="editor">Editor</div>
+            <div class="col-md-9">
+                <textarea id="editor" style="display: none;"></textarea>
+            </div>
+        </div>
+
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-md-offset-8 col-md-4">
+                    <a class="btn btn-primary hidden-print pull-right btn-sm save" href="#">save</a>
+                </div>
+            </div>
         </div>
 
     </div>
