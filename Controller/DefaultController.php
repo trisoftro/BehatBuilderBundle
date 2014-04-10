@@ -37,7 +37,9 @@ class DefaultController extends Controller
     {
         $fileContent = $this->get('tss_behat.builder')->loadFile($this->getRequest()->request->get('file'));
 
-        return new Response($fileContent);
+        return new JsonResponse(array(
+            'content' => $fileContent
+        ));
     }
 
     /**

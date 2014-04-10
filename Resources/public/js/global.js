@@ -3,15 +3,16 @@
 
     $(function() {
 
-        $.timerNotifier = function (text, seconds) {
+        $.timerNotifier = function (text, className, seconds) {
 
             seconds = seconds || 5;
+            className = className || 'text-success';
 
-            $('#status').addClass('text-success').html(text);
+            $('#status').addClass(className).html(text);
 
             var successTimeout = window.setTimeout(
                 function () {
-                    $('#status').html('').removeClass('text-success');
+                    $('#status').html('').removeClass(className);
                 },
                 seconds * 1000
             );
@@ -40,17 +41,24 @@
                 },
                 success: function(data)
                 {
-                    editor.setValue(data);
-                    currentFeature = file;
-                    $('#status').html('');
+                    if(data.content) {
+                        editor.setValue(data.content);
+                        currentFeature = file;
+                        $.timerNotifier('`' + currentFeature + '` loaded successfully.')
+                    } else {
+                        editor.setValue('');
+                        $.timerNotifier('Could not load requested file.', 'text-danger')
+                    }
                 }
             });
         };
 
         $.loadHash = function() {
-            var file = window.location.href.substring(window.location.href.indexOf('#')+1);
+            var file = (window.location.href.indexOf('#') != -1) ? window.location.href.substring(window.location.href.indexOf('#')+1) : false;
 
-            $.loadFile(file);
+            if(file) {
+                $.loadFile(file);
+            }
         };
 
         //load initial hash

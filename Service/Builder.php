@@ -41,13 +41,13 @@ class Builder {
     {
         $filePath = $this->kernelRootDir . '/../src/' . $filePath;
 
-        return file_get_contents($filePath);
+        return @file_get_contents($filePath);
     }
 
     public function saveFile($filePath, $data)
     {
         $filePath = $this->kernelRootDir . '/../src/' . $filePath;
 
-        return file_put_contents($filePath, $data);
+        return @file_put_contents($filePath, $data);
     }
 }
