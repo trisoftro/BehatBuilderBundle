@@ -20,8 +20,7 @@
 
         var editor = CodeMirror.fromTextArea($('#editor').get(0), {
             mode: "text/html",
-            lineNumbers: true,
-            matchBrackets: true
+            lineNumbers: true
         });
 
         var editorHeight = $('#feature-c').height();
@@ -30,10 +29,7 @@
 
         var currentFeature;
 
-        $('a[data-feature]').click(function() {
-            var a = $(this),
-                file = a.get(0).hash.substring(a.get(0).hash.indexOf('#')+1);
-
+        $.loadFile = function (file) {
             $('#status').html('Loading `' + file + '`.');
 
             $.ajax({
@@ -49,6 +45,19 @@
                     $('#status').html('');
                 }
             });
+        };
+
+        $(window).bind('popstate', function(event) {
+            var file = this.location.href.substring(this.location.href.indexOf('#')+1);
+
+            $.loadFile(file);
+        });
+
+
+        $('a[data-feature]').click(function() {
+            var file = this.hash.substring(this.hash.indexOf('#')+1);
+
+            $.loadFile(file);
         });
 
         $("a.save").click(function() {
