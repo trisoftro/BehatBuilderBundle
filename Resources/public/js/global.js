@@ -53,6 +53,8 @@
 
                     '</div></div>'
             );
+
+            $(document).trigger("modal.update", []);
         },
         show: function () {
             this.getModal().modal('show');
@@ -130,8 +132,7 @@
                 data: {
                     file: file
                 },
-                success: function(data)
-                {
+                success: function(data) {
                     if(data.content) {
                         editor.setValue(data.content);
                         currentFeature = file;
@@ -160,10 +161,6 @@
             $.loadHash();
         });
 
-        $('a[data-feature]').click(function() {
-            $.loadHash();
-        });
-
         $("a.save").click(function() {
 
             $('#status').html('Saving `' + currentFeature + '` ...');
@@ -175,8 +172,7 @@
                     file: currentFeature,
                     data: editor.getValue()
                 },
-                success: function(data)
-                {
+                success: function(data) {
                     if (data.success) {
                         $.timerNotifier('`' + currentFeature + '` saved successfully.');
                     }
@@ -189,27 +185,41 @@
             return false;
         });
 
+        $(document).bind("modal.update", function() {
+            $('#submit').on("click", function(){
+
+                var form = $('#new-feature');
+                var data = form.serializeArray();
+
+                $.ajax({
+                    type: form.attr('method'),
+                    url: form.attr('action'),
+                    data: data,
+                    beforeSend: function (xhr) {
+                        $.modalDialog.setBody('Submitting ...');
+                    },
+                    success: function(data) {
+                        $.modalDialog.setBody(data);
+                    }
+                });
+            });
+        });
+
         $("a.add").click(function() {
 
             $.modalDialog.render({
                 header: '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>Add new feature</h3>',
                 body: $('#new-feature').length ? $.modalDialog.getBody().html() : 'Loading form ...',
-                footer: '<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button><button type="button" class="btn btn-primary">Save</button>'
+                footer: '<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button><button type="button" id="submit" class="btn btn-primary">Save</button>'
             });
 
             $.modalDialog.show();
-
-            $.modalDialog.getFooter().find('.btn-primary').click(function() {
-                $('#new-feature').submit();
-                return false;
-            });
 
             if($('#new-feature').length === 0) {
                 $.ajax({
                     type: 'POST',
                     url: Routing.generate('behat_new_feature'),
-                    success: function(data)
-                    {
+                    success: function(data) {
                         $.modalDialog.setBody(data);
                     }
                 });

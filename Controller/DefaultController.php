@@ -24,10 +24,10 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        $features = $this->get('tss_behat.builder')->getFeatures();
+        $featuresGroups = $this->get('tss_behat.builder')->getFeatures();
 
         return array(
-            'features' => $features
+            'groups' => $featuresGroups
         );
     }
 
@@ -70,11 +70,13 @@ class DefaultController extends Controller
         $form   = $this->createForm(new NewFeatureType($this->get('tss_behat.builder')));
 
         if ($request->isMethod('POST')) {
-            $form->bind($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 
+                $data = $form->getData();
 
+                return new Response('Successfully created new feature!');
             }
         }
 

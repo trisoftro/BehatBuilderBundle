@@ -25,11 +25,21 @@
         <div class="row">
             <div class="col-md-3" id="feature-c">
                 <ul class="nav">
-                    {% for key, feature in features %}
-                    <li class="{% if loop.first %}{% endif %}">
-                        <a data-feature href="#{{ key }}">{{ feature }}</a>
+                    {% for group, features in groups %}
+                    <li>
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                        {{ group }}
                     </li>
-                    {% endfor %}
+                    <li>
+                        <ul class="nav">
+                            {% for path, filename in features %}
+                                <li>
+                                    <a href="#{{ path }}">{{ filename }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        {% endfor %}
+                    </li>
                 </ul>
             </div>
 

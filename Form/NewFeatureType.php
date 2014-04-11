@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class NewFeatureType extends AbstractType
 {
@@ -26,19 +27,23 @@ class NewFeatureType extends AbstractType
                     'data-placeholder' => 'Select Bundle'
                 ),
                 'empty_value' => 'Select Bundle',
-                'required' => true
+                'required' => true,
+                'constraints' => array(
+                    new NotBlank(),
+                    new \Symfony\Component\Validator\Constraints\Choice(array(
+                        'choices' => $this->behatBuilder->getBundles()
+                    ))
+                )
             ))
             ->add('filename', 'text', array(
                 'attr' => array(
                     'data-placeholder' => 'Write a filename for your feature'
+                ),
+                'constraints' => array(
+                    new NotBlank()
                 )
             ))
         ;
-    }
-
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-
     }
 
     public function getName()

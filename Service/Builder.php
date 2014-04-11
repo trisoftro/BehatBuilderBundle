@@ -32,7 +32,12 @@ class Builder {
                 ->name('*.feature');
 
             foreach ($this->finder as $file) {
-                $this->features[$file->getRelativePathname()] = $file->getFilename();
+                $groupParsed = explode('/', $file->getRelativePathname());
+                $group = $groupParsed[0].'/'.$groupParsed[1];
+                if(!isset($this->features[$group])) {
+                    $this->features[$group] = array();
+                }
+                $this->features[$group][$file->getRelativePathname()] = $file->getFilename();
             }
         }
 
