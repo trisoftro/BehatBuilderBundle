@@ -1,7 +1,7 @@
 TSSBehatBuilderBundle
 =====================
 
-Behat builder interface for building and maintaining scenarios in a Symfony2 project
+Maintaining Behat features of a Symfony2 project directly in the browser
 
 Installation instructions:
 
@@ -30,5 +30,7 @@ Installation instructions:
     }
 ```
 
+@TODO:
+ - add lexical parser and autocompleter
 
 Enjoy :)
