@@ -30,6 +30,19 @@ Installation instructions:
     }
 ```
 
+- Symlink assets: 
+
+```
+    php app/console assets:install --symlink web
+```
+
+- Enable the bundle in assetic:
+```
+    assetic:
+        (...)
+        bundles:        [ TSSBehatBuilderBundle ]
+```
+
 @TODO:
  - add lexical parser and autocompleter
 
