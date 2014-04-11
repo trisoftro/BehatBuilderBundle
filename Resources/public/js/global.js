@@ -117,18 +117,20 @@
             lineNumbers: true
         });
 
-        var editorHeight = $('#feature-c').height();
+        var featuresColumn = $('#features-c');
+
+        var editorHeight = featuresColumn.height();
         editorHeight = editorHeight < 500 ? 500 : editorHeight;
         editor.setSize('100%', editorHeight);
 
         var currentFeature;
 
-        $.loadFile = function (file) {
+        $.loadFeature = function (file) {
             $('#status').removeClass().html('Loading `' + file + '`.');
 
             $.ajax({
                 type: 'POST',
-                url: Routing.generate('behat_load_file'),
+                url: Routing.generate('behat_load_feature'),
                 data: {
                     file: file
                 },
@@ -145,11 +147,29 @@
             });
         };
 
+        $.loadFeatures = function () {
+            $('#status').removeClass().html('Loading features.');
+
+            $.ajax({
+                type: 'POST',
+                url: Routing.generate('behat_load_features'),
+                success: function(data) {
+                    if(data.content) {
+                        featuresColumn.html(data.content);
+                        $.timerNotifier('Features loaded successfully.')
+                    } else {
+                        editor.setValue('');
+                        $.timerNotifier('Could not load features.', 'text-danger')
+                    }
+                }
+            });
+        };
+
         $.loadHash = function() {
             var file = (window.location.href.indexOf('#') != -1) ? window.location.href.substring(window.location.href.indexOf('#')+1) : false;
 
             if(file) {
-                $.loadFile(file);
+                $.loadFeature(file);
             }
         };
 
@@ -167,7 +187,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: Routing.generate('behat_save_file'),
+                url: Routing.generate('behat_save_feature'),
                 data: {
                     file: currentFeature,
                     data: editor.getValue()
@@ -199,7 +219,8 @@
                         $.modalDialog.setBody('Submitting ...');
                     },
                     success: function(data) {
-                        $.modalDialog.setBody(data);
+                        $.modalDialog.hide();
+                        $.loadFeatures();
                     }
                 });
             });
@@ -207,23 +228,24 @@
 
         $("a.add").click(function() {
 
-            $.modalDialog.render({
-                header: '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>Add new feature</h3>',
-                body: $('#new-feature').length ? $.modalDialog.getBody().html() : 'Loading form ...',
-                footer: '<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button><button type="button" id="submit" class="btn btn-primary">Save</button>'
-            });
-
-            $.modalDialog.show();
-
             if($('#new-feature').length === 0) {
+
+                $.modalDialog.render({
+                    header: '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3>Add new feature</h3>',
+                    body: 'Loading form ...',
+                    footer: '<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button><button type="button" id="submit" class="btn btn-primary">Save</button>'
+                });
+
                 $.ajax({
-                    type: 'POST',
+                    type: 'GET',
                     url: Routing.generate('behat_new_feature'),
                     success: function(data) {
-                        $.modalDialog.setBody(data);
+                        $.modalDialog.setBody(data.content);
                     }
                 });
             }
+
+            $.modalDialog.show();
 
             return false;
         });

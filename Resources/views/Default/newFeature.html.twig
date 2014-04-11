@@ -1,12 +1,12 @@
 <form novalidate id="new-feature" role="form" action="{{ path('behat_new_feature') }}" method="post" {{ form_enctype(form) }}>
     <div class="form-group">
-        {{ form_label(form.bundle, label|default(null), { 'label_attr': { 'class': 'sr-only' } }) }}
+        {{ form_label(form.bundle, label|default(null), { 'label_attr': { 'class': '' } }) }}
         {{ form_widget(form.bundle, { 'attr': { 'class': 'select2 form-control', 'data-required':'true'} }) }}
         {{ form_errors(form.bundle) }}
     </div>
 
     <div class="form-group">
-        {{ form_label(form.filename, label|default(null), { 'label_attr': { 'class': 'sr-only' } }) }}
+        {{ form_label(form.filename, label|default(null), { 'label_attr': { 'class': '' } }) }}
         {{ form_widget(form.filename, { 'attr': { 'class': 'form-control' } }) }}
         {{ form_errors(form.filename) }}
     </div>

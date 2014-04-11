@@ -5,3 +5,8 @@
     overflow-y: auto;
     overflow-x: auto;
 }
+
+#features-c {
+    overflow-y: auto;
+    max-height: 500px;
+}

@@ -10,6 +10,7 @@
 
     <services>
         <service id="tss_behat.builder" class="%tss_behat.builder.class%">
+            <argument type="service" id="templating"/>
             <argument>%kernel.root_dir%</argument>
         </service>
     </services>

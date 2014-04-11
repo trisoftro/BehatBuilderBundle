@@ -1,0 +1,17 @@
+<ul class="nav">
+    {% for group, features in groups %}
+    <li>
+        <span class="glyphicon glyphicon-chevron-right"></span>
+        {{ group }}
+    </li>
+    <li>
+        <ul class="nav">
+            {% for path, filename in features %}
+                <li>
+                    <a href="#{{ path }}">{{ filename }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+        {% endfor %}
+    </li>
+</ul>

@@ -23,24 +23,8 @@
         </div>
 
         <div class="row">
-            <div class="col-md-3" id="feature-c">
-                <ul class="nav">
-                    {% for group, features in groups %}
-                    <li>
-                        <span class="glyphicon glyphicon-chevron-right"></span>
-                        {{ group }}
-                    </li>
-                    <li>
-                        <ul class="nav">
-                            {% for path, filename in features %}
-                                <li>
-                                    <a href="#{{ path }}">{{ filename }}</a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                        {% endfor %}
-                    </li>
-                </ul>
+            <div class="col-md-3" id="features-c">
+                {% include 'TSSBehatBuilderBundle:Default:features.html.twig' %}
             </div>
 
             <div class="col-md-9">

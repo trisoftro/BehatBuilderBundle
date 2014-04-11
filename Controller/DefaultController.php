@@ -6,6 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,36 +26,30 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        $featuresGroups = $this->get('tss_behat.builder')->getFeatures();
-
         return array(
-            'groups' => $featuresGroups
+            'groups' => $this->get('tss_behat.builder')->getFeatures()
         );
     }
 
     /**
-     * @Route("/load-file", name="behat_load_file", options={"expose"=true})
+     * @Route("/load-feature", name="behat_load_feature", options={"expose"=true})
      * @Method("POST")
      */
     public function loadFileAction()
     {
-        $fileContent = $this->get('tss_behat.builder')->loadFile($this->getRequest()->request->get('file'));
-
         return new JsonResponse(array(
-            'content' => $fileContent
+            'content' => $this->get('tss_behat.builder')->loadFeature($this->getRequest()->request->get('file'))
         ));
     }
 
     /**
-     * @Route("/save-file", name="behat_save_file", options={"expose"=true})
+     * @Route("/save-feature", name="behat_save_feature", options={"expose"=true})
      * @Method("POST")
      */
-    public function saveFileAction()
+    public function saveFeatureAction()
     {
-        $success = $this->get('tss_behat.builder')->saveFile($this->getRequest()->request->get('file'), $this->getRequest()->request->get('data'));
-
         return new JsonResponse(array(
-           'success' => $success
+           'success' => $this->get('tss_behat.builder')->saveFeature($this->getRequest()->request->get('file'), $this->getRequest()->request->get('data'))
         ));
     }
 
@@ -61,7 +57,6 @@ class DefaultController extends Controller
      * New feature processing
      *
      * @Route("/new-feature", name="behat_new_feature", options={"expose"=true})
-     * @Template()
      */
     public function newFeatureAction(Request $request)
     {
@@ -72,18 +67,40 @@ class DefaultController extends Controller
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
 
+            $data = $form->getData();
+
+            if($this->get('tss_behat.builder')->findByBundleAndFilename($data['bundle'], $data['filename'])) {
+                $form->get('filename')->addError(new FormError(sprintf('`%s` feature already found in `%s`.', $data['filename'], $data['bundle'])));
+            }
+
             if ($form->isValid()) {
+                $this->get('tss_behat.builder')->createByBundleAndFilename($data['bundle'], $data['filename']);
 
-                $data = $form->getData();
-
-                return new Response('Successfully created new feature!');
+                return new JsonResponse(array(
+                    'success' => true,
+                    'content' => 'Successfully created new feature!'
+                ));
             }
         }
 
-        $formView = $form->createView();
+        $content = $this->container->get('templating')->render('TSSBehatBuilderBundle:Default:newFeature.html.twig', array(
+            'form' => $form->createView()
+        ));
 
-        return array(
-            'form' => $formView
-        );
+        return new JsonResponse(array(
+            'success' => $form->isValid(),
+            'content' => $content,
+        ));
+    }
+
+    /**
+     * @Route("/load-features", name="behat_load_features", options={"expose"=true})
+     * @Method("POST")
+     */
+    public function loadFeaturesAction()
+    {
+        return new JsonResponse(array(
+            'content' => $this->get('tss_behat.builder')->loadFeatures()
+        ));
     }
 }

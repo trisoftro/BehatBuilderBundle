@@ -7,6 +7,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Choice;
+
 
 class NewFeatureType extends AbstractType
 {
@@ -30,8 +32,8 @@ class NewFeatureType extends AbstractType
                 'required' => true,
                 'constraints' => array(
                     new NotBlank(),
-                    new \Symfony\Component\Validator\Constraints\Choice(array(
-                        'choices' => $this->behatBuilder->getBundles()
+                    new Choice(array(
+                        'choices' => array_keys($this->behatBuilder->getBundles())
                     ))
                 )
             ))
