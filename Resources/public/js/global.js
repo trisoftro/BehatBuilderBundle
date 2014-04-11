@@ -221,6 +221,7 @@
                     success: function(data) {
                         $.modalDialog.hide();
                         $.loadFeatures();
+                        $.loadFeature(data.file);
                     }
                 });
             });

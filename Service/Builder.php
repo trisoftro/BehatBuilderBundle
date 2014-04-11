@@ -109,10 +109,13 @@ class Builder {
     public function createByBundleAndFilename($bundle, $filename)
     {
         $filePath = $this->kernelRootDir . '/../src/'. $bundle . '/Features/' . $this->processFilename($filename);
+        $relativePath = str_replace($this->kernelRootDir . '/../src/', '', $filePath);
         $filename = basename($filePath);
         $dirPath = str_replace($filename, '', $filePath);
 
         $this->fs->mkdir($dirPath);
         $this->fs->copy(__DIR__.'/../Features/skeleton.feature', $filePath);
+
+        return $relativePath;
     }
 }

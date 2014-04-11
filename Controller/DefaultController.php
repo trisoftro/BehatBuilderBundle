@@ -74,11 +74,11 @@ class DefaultController extends Controller
             }
 
             if ($form->isValid()) {
-                $this->get('tss_behat.builder')->createByBundleAndFilename($data['bundle'], $data['filename']);
+                $file = $this->get('tss_behat.builder')->createByBundleAndFilename($data['bundle'], $data['filename']);
 
                 return new JsonResponse(array(
                     'success' => true,
-                    'content' => 'Successfully created new feature!'
+                    'file' => $file
                 ));
             }
         }
